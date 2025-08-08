@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_initialMenuFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_initialMenuFragment_to_dictionaryFragment"
+            app:destination="@id/dictionaryFragment" />
     </fragment>
 
     <fragment
@@ -30,15 +33,16 @@
         android:name="org.tensorflow.lite.examples.objectdetection.fragments.LearningFragment"
         android:label="fragment_learning"
         tools:layout="@layout/fragment_learning" >
-        <argument
-            android:name="palavra"
-            app:argType="string" />
-        <argument
-            android:name="imageUri"
-            app:argType="string" />
+        <argument android:name="palavra" app:argType="string" />
+        <argument android:name="imageUri" app:argType="string" />
         <action
             android:id="@+id/action_learningFragment_to_contextFragment"
             app:destination="@id/contextFragment" />
+        <!-- AÇÃO EM FALTA ADICIONADA AQUI -->
+        <action
+            android:id="@+id/action_learningFragment_to_dictionaryFragment"
+            app:destination="@id/dictionaryFragment"
+            app:popUpTo="@id/cameraFragment" />
     </fragment>
 
     <fragment
@@ -46,18 +50,20 @@
         android:name="org.tensorflow.lite.examples.objectdetection.fragments.ContextFragment"
         android:label="fragment_context"
         tools:layout="@layout/fragment_context" >
-        <argument
-            android:name="palavra"
-            app:argType="string" />
-        <argument
-            android:name="silabas"
-            app:argType="string" />
-        <argument
-            android:name="imageUri"
-            app:argType="string" />
-        <argument
-            android:name="frases"
-            app:argType="string[]" />
+        <argument android:name="palavra" app:argType="string" />
+        <argument android:name="silabas" app:argType="string" />
+        <argument android:name="imageUri" app:argType="string" />
+        <argument android:name="frases" app:argType="string[]" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/dictionaryFragment"
+        android:name="org.tensorflow.lite.examples.objectdetection.fragments.DictionaryFragment"
+        android:label="fragment_dictionary"
+        tools:layout="@layout/fragment_dictionary" >
+        <action
+            android:id="@+id/action_dictionaryFragment_to_contextFragment"
+            app:destination="@id/contextFragment" />
     </fragment>
 
 </navigation>

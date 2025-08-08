@@ -70,7 +70,20 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:padding="16dp"
-        android:text="Ver Exemplos e Salvar"
+        android:text="Em Contexto"
+        app:layout_constraintBottom_toTopOf="@id/button_salvar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_salvar"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:padding="16dp"
+        android:text="Salvar no Meu Dicionário"
         app:layout_constraintBottom_toTopOf="@id/button_voltar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -82,7 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         android:padding="16dp"
         android:text="Voltar"
         app:layout_constraintBottom_toBottomOf="parent"

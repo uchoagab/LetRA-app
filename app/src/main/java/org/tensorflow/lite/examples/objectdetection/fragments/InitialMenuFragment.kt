@@ -25,6 +25,7 @@ class InitialMenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Navega para a câmera
         binding.buttonStartDetection.setOnClickListener {
             findNavController().navigate(
                 InitialMenuFragmentDirections.actionInitialMenuFragmentToCameraFragment()
@@ -32,7 +33,9 @@ class InitialMenuFragment : Fragment() {
         }
 
         binding.buttonDictionary.setOnClickListener {
-            Toast.makeText(context, "Dicionário a ser implementado!", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(
+                InitialMenuFragmentDirections.actionInitialMenuFragmentToDictionaryFragment()
+            )
         }
     }
 

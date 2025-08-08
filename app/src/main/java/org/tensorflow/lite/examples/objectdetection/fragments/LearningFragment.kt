@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.examples.objectdetection.BuildConfig
 import org.tensorflow.lite.examples.objectdetection.ConteudoEducacional
+import org.tensorflow.lite.examples.objectdetection.DictionaryManager
 import org.tensorflow.lite.examples.objectdetection.GeminiResult
 import org.tensorflow.lite.examples.objectdetection.databinding.FragmentLearningBinding
 import org.tensorflow.lite.examples.objectdetection.gerarConteudoEducacional
@@ -40,6 +41,7 @@ class LearningFragment : Fragment() {
         binding.imageViewSnapshot.setImageURI(Uri.parse(args.imageUri))
         binding.textViewPalavra.text = "Analisando..."
         binding.buttonContexto.isVisible = false
+        binding.buttonSalvar.isVisible = false
 
         callGeminiApi(args.palavra)
 
@@ -52,6 +54,21 @@ class LearningFragment : Fragment() {
                         args.imageUri,
                         conteudo.frases.toTypedArray()
                     )
+                )
+            }
+        }
+
+        binding.buttonSalvar.setOnClickListener {
+            conteudoAtual?.let { conteudo ->
+                DictionaryManager.saveWord(
+                    requireContext(),
+                    conteudo,
+                    Uri.parse(args.imageUri)
+                )
+                Toast.makeText(context, "'${conteudo.palavraTraduzida}' salvo no dicionário!", Toast.LENGTH_SHORT).show()
+
+                findNavController().navigate(
+                    LearningFragmentDirections.actionLearningFragmentToDictionaryFragment()
                 )
             }
         }
@@ -76,11 +93,12 @@ class LearningFragment : Fragment() {
                     conteudoAtual = resultado.conteudo
                     binding.textViewPalavra.text = conteudoAtual!!.palavraTraduzida.uppercase()
                     binding.textViewSilabas.text = conteudoAtual!!.silabas
-                    binding.buttonContexto.isVisible = true // Mostra o botão
+                    binding.buttonContexto.isVisible = true
+                    binding.buttonSalvar.isVisible = true
                 }
                 is GeminiResult.Error -> {
                     binding.textViewPalavra.text = palavraEmIngles.uppercase()
-                    binding.textViewSilabas.text = if (resultado.isQuotaError) "Quota excedida." else "Erro ao analisar."
+                    binding.textViewSilabas.text = resultado.message
                 }
             }
         }
