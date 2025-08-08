@@ -1,0 +1,46 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+    TEMA BASE DA APLICAÇÃO (MODO CLARO)
+    A linha 'parent' foi alterada para um tema Material3.
+    Isto resolve o erro de "InflateException" com o MaterialCardView.
+    -->
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Personalize o seu tema aqui. -->
+        <item name="colorPrimary">@color/toolbar_background</item>
+        <item name="colorPrimaryVariant">@color/toolbar_background</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <!-- Cores secundárias -->
+        <item name="colorSecondary">@android:color/holo_blue_dark</item>
+        <item name="colorSecondaryVariant">@android:color/holo_blue_light</item>
+        <item name="colorOnSecondary">@android:color/black</item>
+        <!-- Cor da barra de status -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
+
+    <!--
+    Este é um tema alternativo que pode ser usado.
+    Se o 'Theme.Material3' não funcionar por alguma razão,
+    pode tentar usar 'Theme.MaterialComponents'.
+    -->
+    <style name="AppTheme.MaterialComponents" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Personalize o seu tema aqui. -->
+        <item name="colorPrimary">@color/toolbar_background</item>
+        <item name="colorPrimaryVariant">@color/toolbar_background</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <!-- Cores secundárias -->
+        <item name="colorSecondary">@android:color/holo_blue_dark</item>
+        <item name="colorSecondaryVariant">@android:color/holo_blue_light</item>
+        <item name="colorOnSecondary">@android:color/black</item>
+        <!-- Cor da barra de status -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
+
+    <!--
+    ESTILO FALTANTE: Adicionado para corrigir o erro "failed linking file resources".
+    Este estilo é usado pelos spinners na parte inferior da tela.
+    -->
+    <style name="BottomSheetSpinnerItemStyle" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:textAppearance">?attr/textAppearanceTitleMedium</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+</resources>

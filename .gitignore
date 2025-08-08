@@ -1,0 +1,40 @@
+# Arquivos de Build e Saída
+# =======================================
+build/
+.gradle/
+captures/
+.DS_Store
+*~
+*.swp
+
+# Arquivos de Configuração Local (Sensíveis ou Específicos da Máquina)
+# ===================================================================
+local.properties
+
+# Arquivos de Configuração do Android Studio e IntelliJ
+# ========================================================
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+*.iws
+
+# Arquivos de Log do Crashlytics
+# ==================================
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Chaves de Assinatura (MUITO IMPORTANTE)
+# =========================================
+*.jks
+*.keystore
+
+# Arquivos do NDK
+# ================
+.cxx/
+*/src/main/jni/prebuilt/
+*/src/main/jniLibs/
