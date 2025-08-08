@@ -5,43 +5,59 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/initialMenuFragment">
 
-    <!-- 1. Tela Inicial -->
     <fragment
         android:id="@+id/initialMenuFragment"
         android:name="org.tensorflow.lite.examples.objectdetection.fragments.InitialMenuFragment"
         android:label="fragment_initial_menu"
         tools:layout="@layout/fragment_initial_menu" >
-        <!-- Ação para ir para a câmara -->
         <action
             android:id="@+id/action_initialMenuFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
     </fragment>
 
-    <!-- 2. Tela da Câmara/Deteção -->
     <fragment
         android:id="@+id/cameraFragment"
         android:name="org.tensorflow.lite.examples.objectdetection.fragments.CameraFragment"
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" >
-        <!-- Ação para ir para a tela de aprendizagem -->
         <action
             android:id="@+id/action_cameraFragment_to_learningFragment"
             app:destination="@id/learningFragment" />
     </fragment>
 
-    <!-- 3. Tela de Aprendizagem -->
     <fragment
         android:id="@+id/learningFragment"
         android:name="org.tensorflow.lite.examples.objectdetection.fragments.LearningFragment"
         android:label="fragment_learning"
         tools:layout="@layout/fragment_learning" >
-        <!-- Argumentos que esta tela espera receber -->
         <argument
             android:name="palavra"
             app:argType="string" />
         <argument
             android:name="imageUri"
             app:argType="string" />
+        <action
+            android:id="@+id/action_learningFragment_to_contextFragment"
+            app:destination="@id/contextFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/contextFragment"
+        android:name="org.tensorflow.lite.examples.objectdetection.fragments.ContextFragment"
+        android:label="fragment_context"
+        tools:layout="@layout/fragment_context" >
+        <argument
+            android:name="palavra"
+            app:argType="string" />
+        <argument
+            android:name="silabas"
+            app:argType="string" />
+        <argument
+            android:name="imageUri"
+            app:argType="string" />
+        <argument
+            android:name="frases"
+            app:argType="string[]" />
     </fragment>
 
 </navigation>

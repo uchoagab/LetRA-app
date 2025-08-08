@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.examples.objectdetection.BuildConfig
+import org.tensorflow.lite.examples.objectdetection.ConteudoEducacional
 import org.tensorflow.lite.examples.objectdetection.GeminiResult
 import org.tensorflow.lite.examples.objectdetection.databinding.FragmentLearningBinding
 import org.tensorflow.lite.examples.objectdetection.gerarConteudoEducacional
@@ -21,6 +23,8 @@ class LearningFragment : Fragment() {
     private var _binding: FragmentLearningBinding? = null
     private val binding get() = _binding!!
     private val args: LearningFragmentArgs by navArgs()
+
+    private var conteudoAtual: ConteudoEducacional? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,20 +37,27 @@ class LearningFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-
-        val palavraEmIngles = args.palavra
-        binding.toolbar.title = palavraEmIngles.replaceFirstChar { it.uppercase() }
         binding.imageViewSnapshot.setImageURI(Uri.parse(args.imageUri))
-        binding.textViewPalavra.text = "Analisando..." // Placeholder
+        binding.textViewPalavra.text = "Analisando..."
+        binding.buttonContexto.isVisible = false
 
-        callGeminiApi(palavraEmIngles)
+        callGeminiApi(args.palavra)
 
         binding.buttonContexto.setOnClickListener {
-            Toast.makeText(context, "Função a ser implementada!", Toast.LENGTH_SHORT).show()
+            conteudoAtual?.let { conteudo ->
+                findNavController().navigate(
+                    LearningFragmentDirections.actionLearningFragmentToContextFragment(
+                        conteudo.palavraTraduzida,
+                        conteudo.silabas,
+                        args.imageUri,
+                        conteudo.frases.toTypedArray()
+                    )
+                )
+            }
         }
-        binding.buttonSalvar.setOnClickListener {
-            Toast.makeText(context, "Função a ser implementada!", Toast.LENGTH_SHORT).show()
+
+        binding.buttonVoltar.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
 
@@ -60,23 +71,16 @@ class LearningFragment : Fragment() {
 
             binding.progressBar.visibility = View.GONE
 
-            // Lida com o resultado usando a nossa nova classe selada
             when (resultado) {
                 is GeminiResult.Success -> {
-                    val conteudo = resultado.conteudo
-                    // A palavra traduzida pode ser extraída das sílabas
-                    val palavraTraduzida = conteudo.silabas.replace("-", "")
-                    binding.textViewPalavra.text = palavraTraduzida.uppercase()
-                    binding.toolbar.title = palavraTraduzida.replaceFirstChar { it.uppercase() }
-                    binding.textViewSilabas.text = conteudo.silabas
+                    conteudoAtual = resultado.conteudo
+                    binding.textViewPalavra.text = conteudoAtual!!.palavraTraduzida.uppercase()
+                    binding.textViewSilabas.text = conteudoAtual!!.silabas
+                    binding.buttonContexto.isVisible = true // Mostra o botão
                 }
                 is GeminiResult.Error -> {
                     binding.textViewPalavra.text = palavraEmIngles.uppercase()
-                    if (resultado.isQuotaError) {
-                        binding.textViewSilabas.text = "Quota da API excedida."
-                    } else {
-                        binding.textViewSilabas.text = "Erro ao analisar."
-                    }
+                    binding.textViewSilabas.text = if (resultado.isQuotaError) "Quota excedida." else "Erro ao analisar."
                 }
             }
         }
