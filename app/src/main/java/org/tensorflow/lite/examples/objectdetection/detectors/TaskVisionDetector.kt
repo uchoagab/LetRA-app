@@ -1,64 +1,78 @@
 package org.tensorflow.lite.examples.objectdetection.detectors
 
 import android.content.Context
-import org.tensorflow.lite.examples.objectdetection.ObjectDetectorHelper.Companion.MODEL_EFFICIENTDETV0
-import org.tensorflow.lite.examples.objectdetection.ObjectDetectorHelper.Companion.MODEL_EFFICIENTDETV1
-import org.tensorflow.lite.examples.objectdetection.ObjectDetectorHelper.Companion.MODEL_EFFICIENTDETV2
-import org.tensorflow.lite.examples.objectdetection.ObjectDetectorHelper.Companion.MODEL_MOBILENETV1
+import android.util.Log
+import org.tensorflow.lite.examples.objectdetection.ObjectDetectorHelper
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.vision.detector.Detection
-import org.tensorflow.lite.task.vision.detector.ObjectDetector
-import java.util.LinkedList
+import org.tensorflow.lite.task.vision.detector.ObjectDetector as TFLiteObjectDetector
 
+/**
+ * Detector que usa a Task Library do TensorFlow Lite.
+ * Esta é a versão corrigida para corresponder à sua interface ObjectDetector.
+ */
 class TaskVisionDetector(
-    var options: ObjectDetector.ObjectDetectorOptions,
-    var currentModel: Int = 0,
-    val context: Context,
+    private val options: TFLiteObjectDetector.ObjectDetectorOptions,
+    private val model: Int,
+    private val context: Context
+) : ObjectDetector {
 
-    ): org.tensorflow.lite.examples.objectdetection.detectors.ObjectDetector {
-
-    private var objectDetector: ObjectDetector
+    private var detector: TFLiteObjectDetector? = null
 
     init {
-
-        val modelName =
-            when (currentModel) {
-                MODEL_MOBILENETV1 -> "oi/mobilenetv1.tflite"
-                MODEL_EFFICIENTDETV0 -> "oi/efficientdet-lite0.tflite"
-                MODEL_EFFICIENTDETV1 -> "oi/efficientdet-lite1.tflite"
-                MODEL_EFFICIENTDETV2 -> "oi/efficientdet-lite2.tflite"
-                else -> "oi/mobilenetv1.tflite"
-            }
-
-        objectDetector = ObjectDetector.createFromFileAndOptions(context, modelName, options)
-
+        setupDetector()
     }
 
-    override fun detect(tensorImage: TensorImage, imageRotation: Int): DetectionResult {
+    private fun setupDetector() {
+        try {
+            val modelName = when (model) {
+                ObjectDetectorHelper.MODEL_EFFICIENTDETV0 -> "efficientdet-lite0.tflite"
+                ObjectDetectorHelper.MODEL_EFFICIENTDETV1 -> "efficientdet-lite1.tflite"
+                ObjectDetectorHelper.MODEL_EFFICIENTDETV2 -> "efficientdet-lite2.tflite"
+                ObjectDetectorHelper.MODEL_MOBILENETV1 -> "mobilenetv1.tflite"
+                else -> {
+                    Log.e("TaskVisionDetector", "Modelo não suportado: $model")
+                    "efficientdet-lite0.tflite" // Padrão
+                }
+            }
+            detector = TFLiteObjectDetector.createFromFileAndOptions(context, modelName, options)
+        } catch (e: Exception) {
+            Log.e("TaskVisionDetector", "Falha ao inicializar o detector: ${e.message}")
+        }
+    }
 
-        val tvDetections = objectDetector.detect(tensorImage)
+    // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+    // CORREÇÃO: A função agora devolve um 'DetectionResult', como a sua interface exige.
+    // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+    override fun detect(
+        tensorImage: TensorImage,
+        imageRotation: Int
+    ): DetectionResult {
+        if (detector == null) {
+            return DetectionResult(tensorImage.bitmap, emptyList())
+        }
 
-        // Convert task view detections to common interface
-        val detections = LinkedList<ObjectDetection>()
-        for (tvDetection: Detection in tvDetections) {
+        val results: List<Detection> = detector?.detect(tensorImage) ?: emptyList()
 
-            val cat = tvDetection.categories[0]
-
-            val objDet = ObjectDetection(
-                boundingBox = tvDetection.boundingBox,
+        val objectDetections = results.map { detection ->
+            val tfliteCategory = detection.categories.first()
+            ObjectDetection(
+                boundingBox = detection.boundingBox,
                 category = Category(
-                    cat.label,
-                    cat.score
+                    label = tfliteCategory.label,
+                    confidence = tfliteCategory.score
                 )
             )
-            detections.add(objDet)
         }
-        val results = DetectionResult(
-            tensorImage.bitmap,
-            detections
+
+        return DetectionResult(
+            image = tensorImage.bitmap,
+            detections = objectDetections
         )
+    }
 
-        return results
-
+    fun close() {
+        detector?.close()
+        detector = null
     }
 }
