@@ -7,17 +7,6 @@
     android:background="#FFFFFF"
     tools:context=".fragments.LearningFragment">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
-        app:title="Cadeira"
-        tools:title="Cadeira" />
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_card"
         android:layout_width="0dp"
@@ -25,7 +14,7 @@
         android:layout_margin="24dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintDimensionRatio="1:1">
@@ -34,9 +23,8 @@
             android:id="@+id/image_view_snapshot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             tools:src="@tools:sample/backgrounds/scenic" />
-
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
@@ -81,7 +69,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
         android:padding="16dp"
         android:text="Em Contexto"
         app:layout_constraintBottom_toTopOf="@id/button_salvar"
@@ -95,9 +82,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
         android:padding="16dp"
         android:text="Salvar no Meu Dicionário"
+        app:layout_constraintBottom_toTopOf="@id/button_voltar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_voltar"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:padding="16dp"
+        android:text="Voltar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

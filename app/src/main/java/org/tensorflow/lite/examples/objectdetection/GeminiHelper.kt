@@ -6,20 +6,51 @@ import com.google.ai.client.generativeai.type.QuotaExceededException
 import kotlinx.coroutines.delay
 import org.json.JSONObject
 
-data class ConteudoEducacional(val frase: String, val silabas: String)
+data class ConteudoEducacional(val palavraTraduzida: String, val silabas: String, val frases: List<String>)
 
 sealed class GeminiResult {
     data class Success(val conteudo: ConteudoEducacional) : GeminiResult()
     data class Error(val message: String, val isQuotaError: Boolean = false) : GeminiResult()
 }
 
-// DICIONÁRIO LOCAL (MOCK)
 private val dicionarioMock = mapOf(
-    "chair" to ConteudoEducacional(frase = "A cadeira serve para sentar.", silabas = "ca-dei-ra"),
-    "person" to ConteudoEducacional(frase = "Esta é uma pessoa.", silabas = "pes-so-a"),
-    "bottle" to ConteudoEducacional(frase = "A garrafa tá sem água.", silabas = "gar-ra-fa"),
-    "tv" to ConteudoEducacional(frase = "Eu vejo desenhos na televisão.", silabas = "te-le-vi-são"),
-    "mouse" to ConteudoEducacional(frase = "O mouse controla o computador.", silabas = "mou-se")
+    "chair" to ConteudoEducacional(
+        palavraTraduzida = "Cadeira",
+        silabas = "Ca-dei-ra",
+        frases = listOf(
+            "A cadeira da sala de estar é muito confortável.",
+            "Por favor, puxe uma cadeira e junte-se a nós para o jantar.",
+            "Ele comprou uma cadeira melhor para estudar."
+        )
+    ),
+    "person" to ConteudoEducacional(
+        palavraTraduzida = "Pessoa",
+        silabas = "Pes-so-a",
+        frases = listOf(
+            "Aquela pessoa parece simpática.",
+            "Cada pessoa tem uma história única.",
+            "Uma pessoa educada sempre diz 'obrigado'."
+        )
+    ),
+    "bottle" to ConteudoEducacional(
+        palavraTraduzida = "Garrafa",
+        silabas = "Gar-ra-fa",
+        frases = listOf(
+            "Coloque o mouse na mesa.",
+            "Quero aprender a usar o mouse.",
+            "Esse mouse é confortável."
+        )
+    ),
+    "mouse" to ConteudoEducacional(
+        palavraTraduzida = "Mouse",
+        silabas = "Mou-se",
+        frases = listOf(
+            "Encha a sua garrafa com água antes de sair.",
+            "A garrafa de vidro é reciclável.",
+            "Ele deixou a garrafa em cima da mesa."
+        )
+    )
+
 )
 
 
@@ -30,52 +61,13 @@ suspend fun gerarConteudoEducacional(
     apiKey: String,
     nomeDoObjetoEmIngles: String
 ): GeminiResult {
-
-    // Primeiro, verifica se a palavra está no nosso dicionário local
     if (dicionarioMock.containsKey(nomeDoObjetoEmIngles)) {
         Log.d("GeminiApp", "Objeto encontrado no dicionário local: $nomeDoObjetoEmIngles")
-        // Simula um pequeno atraso de rede para parecer real
         delay(500)
         return GeminiResult.Success(dicionarioMock.getValue(nomeDoObjetoEmIngles))
     }
 
-    // Se não estiver no dicionário, continua e chama a API real do Gemini
     Log.d("GeminiApp", "Objeto não encontrado no dicionário. Chamando a API do Gemini...")
-    val generativeModel = GenerativeModel(
-        modelName = "gemini-1.5-flash",
-        apiKey = apiKey
-    )
-
-    val prompt = """
-    Você é um assistente de alfabetização para adultos.
-    O objeto detetado está em inglês: "$nomeDoObjetoEmIngles".
-    Primeiro, traduza o nome do objeto para o português do Brasil.
-    Depois, para a palavra em português, faça duas coisas:
-    1. Crie uma frase curta, simples e positiva.
-    2. Separe o nome do objeto em sílabas, usando hífens. Se a palavra for monossílaba ou um estrangeirismo como "mouse", não a separe.
-
-    Sua resposta deve ser um objeto JSON válido com as chaves "frase" e "silabas".
-    """.trimIndent()
-
-    return try {
-        val response = generativeModel.generateContent(prompt)
-        val responseText = response.text
-
-        if (responseText != null) {
-            val cleanedJson = responseText.trim().removeSurrounding("```json", "```").trim()
-            val jsonObject = org.json.JSONObject(cleanedJson)
-            val frase = jsonObject.getString("frase")
-            val silabas = jsonObject.getString("silabas")
-            val conteudo = ConteudoEducacional(frase, silabas)
-            GeminiResult.Success(conteudo)
-        } else {
-            GeminiResult.Error("A resposta do Gemini foi nula.")
-        }
-    } catch (e: QuotaExceededException) {
-        Log.e("GeminiApp", "Quota da API excedida", e)
-        GeminiResult.Error("Quota excedida", isQuotaError = true)
-    } catch (e: Exception) {
-        Log.e("GeminiApp", "Erro ao chamar ou analisar a API do Gemini: ${e.message}", e)
-        GeminiResult.Error("Erro desconhecido: ${e.message}")
-    }
+    // Código do Gemini removido
+    return GeminiResult.Error("Objeto não encontrado no dicionário de simulação.")
 }

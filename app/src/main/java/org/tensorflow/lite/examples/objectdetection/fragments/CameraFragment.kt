@@ -53,7 +53,8 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         objectDetectorHelper = ObjectDetectorHelper(
             context = requireContext(),
             objectDetectorListener = this,
-            currentModel = ObjectDetectorHelper.MODEL_YOLO
+            currentModel = ObjectDetectorHelper.MODEL_EFFICIENTDETV0,
+            currentDelegate = ObjectDetectorHelper.DELEGATE_CPU
         )
         cameraExecutor = Executors.newSingleThreadExecutor()
         binding.viewFinder.post { setUpCamera() }
@@ -93,51 +94,29 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         cameraExecutor.shutdown()
     }
 
-    // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-    // FUNÇÃO DE RECORTE FINAL E CORRIGIDA (VERSÃO 3)
-    // Esta versão remove a lógica de centralização incorreta.
-    // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
     private fun cropBitmap(viewBitmap: Bitmap, box: RectF): Bitmap? {
         try {
             val viewWidth = viewBitmap.width
             val viewHeight = viewBitmap.height
 
-            val isModelLandscape = inputImageWidth > inputImageHeight
-            val isViewPortrait = viewWidth < viewHeight
+            // calcula fator de escala como OverlayView faz
+            val scaleFactor = max(viewWidth / inputImageWidth.toFloat(), viewHeight / inputImageHeight.toFloat())
 
-            val modelWidth: Float
-            val modelHeight: Float
+            // coordenadas da caixa de deteção para as coordenadas da vista
+            val left = box.left * scaleFactor
+            val top = box.top * scaleFactor
+            val right = box.right * scaleFactor
+            val bottom = box.bottom * scaleFactor
 
-            if (isModelLandscape && isViewPortrait) {
-                modelWidth = inputImageHeight.toFloat()
-                modelHeight = inputImageWidth.toFloat()
-            } else {
-                modelWidth = inputImageWidth.toFloat()
-                modelHeight = inputImageHeight.toFloat()
-            }
-
-            val matrix = Matrix()
-            val scaleFactor = max(viewWidth / modelWidth, viewHeight / modelHeight)
-            matrix.postScale(scaleFactor, scaleFactor)
-
-            // A PreviewView com scaleType="fillStart" não centra a imagem,
-            // por isso o deslocamento (dx, dy) deve ser zero.
-            // Esta era a causa do erro.
-
-            val mappedBox = RectF()
-            matrix.mapRect(mappedBox, box)
-
-            val left = mappedBox.left.toInt()
-            val top = mappedBox.top.toInt()
-            val width = mappedBox.width().toInt()
-            val height = mappedBox.height().toInt()
+            val width = right - left
+            val height = bottom - top
 
             if (left < 0 || top < 0 || left + width > viewWidth || top + height > viewHeight) {
-                Log.e(TAG, "Coordenadas de recorte fora dos limites: L:$left, T:$top, W:$width, H:$height | View W:$viewWidth, H:$viewHeight")
+                Log.e(TAG, "Coordenadas de recorte fora dos limites.")
                 return null
             }
 
-            return Bitmap.createBitmap(viewBitmap, left, top, width, height)
+            return Bitmap.createBitmap(viewBitmap, left.toInt(), top.toInt(), width.toInt(), height.toInt())
         } catch (e: Exception) {
             Log.e(TAG, "Erro ao recortar bitmap: ${e.message}")
             return null
@@ -163,6 +142,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
             inputImageWidth = imageWidth
             inputImageHeight = imageHeight
+
             binding.overlay.setResults(results, imageHeight, imageWidth)
             latestDetectedObject = results.firstOrNull()
             binding.buttonAprender.isEnabled = latestDetectedObject != null
@@ -175,7 +155,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         }
     }
 
-    // Funções da câmara (setUpCamera, bindCameraUseCases, etc.)
+    // funções câmara
     private fun setUpCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
