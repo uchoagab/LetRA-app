@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.tensorflow.lite.examples.objectdetection.ObjectDetectorHelper
+import org.tensorflow.lite.examples.objectdetection.SettingsManager
 import org.tensorflow.lite.examples.objectdetection.databinding.FragmentCameraBinding
 import org.tensorflow.lite.examples.objectdetection.detectors.ObjectDetection
 import java.io.File
@@ -48,10 +49,13 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // ATUALIZAÇÃO: Carrega o modelo escolhido pelo utilizador nas configurações
+        val selectedModel = SettingsManager.loadModelChoice(requireContext())
+
         objectDetectorHelper = ObjectDetectorHelper(
             context = requireContext(),
             objectDetectorListener = this,
-            currentModel = ObjectDetectorHelper.MODEL_EFFICIENTDETV0,
+            currentModel = selectedModel, // Usa o modelo guardado
             currentDelegate = ObjectDetectorHelper.DELEGATE_CPU
         )
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -90,7 +94,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         _binding = null
         cameraExecutor.shutdown()
     }
-    
+
     private fun cropAndRotateBitmap(source: Bitmap, box: RectF, rotationDegrees: Int): Bitmap? {
         try {
             val left = box.left.toInt()
@@ -168,7 +172,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                         bitmapBuffer = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
                     }
                     image.use { bitmapBuffer.copyPixelsFromBuffer(image.planes[0].buffer) }
-                    
+
                     imageRotationDegrees = image.imageInfo.rotationDegrees
                     objectDetectorHelper.detect(bitmapBuffer, imageRotationDegrees)
                 }

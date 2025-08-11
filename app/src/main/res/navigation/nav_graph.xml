@@ -16,6 +16,10 @@
         <action
             android:id="@+id/action_initialMenuFragment_to_dictionaryFragment"
             app:destination="@id/dictionaryFragment" />
+        <!-- AÇÃO PARA A NOVA TELA DE CONFIGURAÇÕES -->
+        <action
+            android:id="@+id/action_initialMenuFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
@@ -38,7 +42,6 @@
         <action
             android:id="@+id/action_learningFragment_to_contextFragment"
             app:destination="@id/contextFragment" />
-        <!-- AÇÃO EM FALTA ADICIONADA AQUI -->
         <action
             android:id="@+id/action_learningFragment_to_dictionaryFragment"
             app:destination="@id/dictionaryFragment"
@@ -65,5 +68,12 @@
             android:id="@+id/action_dictionaryFragment_to_contextFragment"
             app:destination="@id/contextFragment" />
     </fragment>
+
+    <!-- NOVA TELA DE CONFIGURAÇÕES DEFINIDA -->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="org.tensorflow.lite.examples.objectdetection.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 
 </navigation>
