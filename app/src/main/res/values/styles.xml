@@ -14,7 +14,17 @@
         <item name="colorSecondaryVariant">@android:color/holo_blue_light</item>
         <item name="colorOnSecondary">@android:color/black</item>
         <!-- Cor da barra de status -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/app_background</item>
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:navigationBarColor">@color/app_background</item>
+        <!-- Icones brancos na barra de navegacao -->
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <!-- Previne Android 10+ de forçar mudanças de contraste -->
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <!-- Previne overrides de contraste do Android 10+ -->
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+
     </style>
 
     <!--
