@@ -18,13 +18,13 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.tensorflow.lite.examples.objectdetection.ObjectDetectorHelper
-import org.tensorflow.lite.examples.objectdetection.SettingsManager
 import org.tensorflow.lite.examples.objectdetection.databinding.FragmentCameraBinding
 import org.tensorflow.lite.examples.objectdetection.detectors.ObjectDetection
 import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.max
 
 class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
@@ -38,7 +38,8 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     private lateinit var cameraExecutor: ExecutorService
 
     private var latestDetectedObject: ObjectDetection? = null
-    private var imageRotationDegrees: Int = 0
+    private var inputImageWidth: Int = 0
+    private var inputImageHeight: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
@@ -49,13 +50,10 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ATUALIZAÇÃO: Carrega o modelo escolhido pelo utilizador nas configurações
-        val selectedModel = SettingsManager.loadModelChoice(requireContext())
-
         objectDetectorHelper = ObjectDetectorHelper(
             context = requireContext(),
             objectDetectorListener = this,
-            currentModel = selectedModel, // Usa o modelo guardado
+            currentModel = ObjectDetectorHelper.MODEL_EFFICIENTDETV0,
             currentDelegate = ObjectDetectorHelper.DELEGATE_CPU
         )
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -63,8 +61,9 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
         binding.buttonAprender.setOnClickListener {
             latestDetectedObject?.let { detection ->
-                val sourceBitmap = bitmapBuffer
-                val croppedBitmap = cropAndRotateBitmap(sourceBitmap, detection.boundingBox, imageRotationDegrees)
+                // Usamos o bitmap da PreviewView, que é o que o utilizador vê
+                val snapshot = binding.viewFinder.bitmap ?: return@setOnClickListener
+                val croppedBitmap = cropBitmap(snapshot, detection.boundingBox)
 
                 if (croppedBitmap != null) {
                     val imageUri = saveBitmapToFile(requireContext(), croppedBitmap)
@@ -95,25 +94,31 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         cameraExecutor.shutdown()
     }
 
-    private fun cropAndRotateBitmap(source: Bitmap, box: RectF, rotationDegrees: Int): Bitmap? {
+    private fun cropBitmap(viewBitmap: Bitmap, box: RectF): Bitmap? {
         try {
-            val left = box.left.toInt()
-            val top = box.top.toInt()
-            val width = box.width().toInt()
-            val height = box.height().toInt()
+            val viewWidth = viewBitmap.width
+            val viewHeight = viewBitmap.height
 
-            if (left < 0 || top < 0 || left + width > source.width || top + height > source.height) {
-                Log.e(TAG, "Coordenadas de recorte fora dos limites da imagem de origem.")
+            // calcula fator de escala como OverlayView faz
+            val scaleFactor = max(viewWidth / inputImageWidth.toFloat(), viewHeight / inputImageHeight.toFloat())
+
+            // coordenadas da caixa de deteção para as coordenadas da vista
+            val left = box.left * scaleFactor
+            val top = box.top * scaleFactor
+            val right = box.right * scaleFactor
+            val bottom = box.bottom * scaleFactor
+
+            val width = right - left
+            val height = bottom - top
+
+            if (left < 0 || top < 0 || left + width > viewWidth || top + height > viewHeight) {
+                Log.e(TAG, "Coordenadas de recorte fora dos limites.")
                 return null
             }
-            val cropped = Bitmap.createBitmap(source, left, top, width, height)
 
-            val matrix = Matrix()
-            matrix.postRotate(rotationDegrees.toFloat())
-            return Bitmap.createBitmap(cropped, 0, 0, cropped.width, cropped.height, matrix, true)
-
+            return Bitmap.createBitmap(viewBitmap, left.toInt(), top.toInt(), width.toInt(), height.toInt())
         } catch (e: Exception) {
-            Log.e(TAG, "Erro ao recortar e rodar bitmap: ${e.message}")
+            Log.e(TAG, "Erro ao recortar bitmap: ${e.message}")
             return null
         }
     }
@@ -135,6 +140,9 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         activity?.runOnUiThread {
             if (_binding == null) return@runOnUiThread
 
+            inputImageWidth = imageWidth
+            inputImageHeight = imageHeight
+
             binding.overlay.setResults(results, imageHeight, imageWidth)
             latestDetectedObject = results.firstOrNull()
             binding.buttonAprender.isEnabled = latestDetectedObject != null
@@ -147,6 +155,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         }
     }
 
+    // funções câmara
     private fun setUpCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
@@ -172,9 +181,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                         bitmapBuffer = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
                     }
                     image.use { bitmapBuffer.copyPixelsFromBuffer(image.planes[0].buffer) }
-
-                    imageRotationDegrees = image.imageInfo.rotationDegrees
-                    objectDetectorHelper.detect(bitmapBuffer, imageRotationDegrees)
+                    objectDetectorHelper.detect(bitmapBuffer, image.imageInfo.rotationDegrees)
                 }
             }
         cameraProvider.unbindAll()
