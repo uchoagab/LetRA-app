@@ -34,10 +34,6 @@ class ObjectDetectorHelper(
 
     fun setupObjectDetector() {
         try {
-            // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-            // CORREÇÃO: A lógica agora usa o TaskVisionDetector, que é compatível
-            // com os modelos MobileNet e EfficientDet.
-            // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
             val optionsBuilder =
                 ObjectDetectorOptions.builder()
                     .setScoreThreshold(threshold)
@@ -54,7 +50,7 @@ class ObjectDetectorHelper(
             optionsBuilder.setBaseOptions(baseOptionsBuilder.build())
             val options = optionsBuilder.build()
 
-            // O TaskVisionDetector irá carregar o modelo correto com base no 'currentModel'
+            // carrega o modelo correto do 'currentModel'
             objectDetector = TaskVisionDetector(
                 options,
                 currentModel,

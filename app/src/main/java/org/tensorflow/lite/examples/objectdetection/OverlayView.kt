@@ -18,7 +18,6 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
     private var results: List<ObjectDetection> = LinkedList<ObjectDetection>()
     private var boxPaint = Paint()
 
-    // Variáveis para guardar as dimensões da imagem de entrada
     private var imageWidth: Int = 1
     private var imageHeight: Int = 1
 
@@ -46,10 +45,6 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
             return
         }
 
-        // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-        // CORREÇÃO: O cálculo do fator de escala foi movido para aqui.
-        // Isto garante que 'width' e 'height' já têm valores válidos.
-        // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
         val scaleFactor = max(width * 1f / imageWidth, height * 1f / imageHeight)
 
         for (result in results) {
@@ -72,11 +67,9 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
     ) {
         results = detectionResults
 
-        // Apenas guardamos as dimensões da imagem aqui
         this.imageWidth = imageWidth
         this.imageHeight = imageHeight
 
-        // Pede para a vista se redesenhar
         invalidate()
     }
 }

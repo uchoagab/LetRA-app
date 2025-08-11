@@ -9,7 +9,6 @@ import org.tensorflow.lite.task.vision.detector.ObjectDetector as TFLiteObjectDe
 
 /**
  * Detector que usa a Task Library do TensorFlow Lite.
- * Esta é a versão corrigida para corresponder à sua interface ObjectDetector.
  */
 class TaskVisionDetector(
     private val options: TFLiteObjectDetector.ObjectDetectorOptions,
@@ -41,9 +40,6 @@ class TaskVisionDetector(
         }
     }
 
-    // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-    // CORREÇÃO: A função agora devolve um 'DetectionResult', como a sua interface exige.
-    // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
     override fun detect(
         tensorImage: TensorImage,
         imageRotation: Int
