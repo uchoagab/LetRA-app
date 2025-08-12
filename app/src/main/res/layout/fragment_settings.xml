@@ -18,48 +18,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- NOVO SELETOR DE MODELO -->
     <TextView
-        android:id="@+id/label_modelo"
-        android:layout_width="0dp"
+        android:id="@+id/label_efficientdet"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Opção de Modelo"
-        android:textColor="@color/cor_titulo"
-        android:textSize="18sp"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="EfficientDet\n(Rápido)"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/switch_model_selector"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/switch_model_selector"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
-    <TextView
-        android:id="@+id/description_modelo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Desligado: EfficientDet (rápido)\nLigado: YOLO (preciso)"
-        android:textColor="@color/cor_subtitulo"
-        app:layout_constraintTop_toBottomOf="@id/label_modelo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/switch_model_selector"/>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_model_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:layout_constraintTop_toTopOf="@id/label_modelo"
-        app:layout_constraintBottom_toBottomOf="@id/description_modelo"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/label_efficientdet"
+        app:layout_constraintEnd_toStartOf="@+id/label_yolo"
+        app:layout_constraintStart_toEndOf="@+id/label_efficientdet"
+        app:layout_constraintTop_toTopOf="@+id/label_efficientdet" />
+
+    <TextView
+        android:id="@+id/label_yolo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="YOLO\n(Preciso)"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/label_efficientdet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/switch_model_selector"
+        app:layout_constraintTop_toTopOf="@+id/label_efficientdet" />
 
     <View
         android:id="@+id/divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
+        android:layout_marginTop="32dp"
         android:background="?android:attr/listDivider"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/description_modelo"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/label_efficientdet" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_clear_dictionary"

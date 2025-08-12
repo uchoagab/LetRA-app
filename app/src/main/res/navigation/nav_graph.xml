@@ -12,11 +12,14 @@
         tools:layout="@layout/fragment_initial_menu" >
         <action
             android:id="@+id/action_initialMenuFragment_to_cameraFragment"
-            app:destination="@id/cameraFragment" />
+            app:destination="@id/cameraFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
         <action
             android:id="@+id/action_initialMenuFragment_to_dictionaryFragment"
             app:destination="@id/dictionaryFragment" />
-        <!-- AÇÃO PARA A NOVA TELA DE CONFIGURAÇÕES -->
         <action
             android:id="@+id/action_initialMenuFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />

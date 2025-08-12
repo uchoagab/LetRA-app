@@ -124,7 +124,7 @@ private val dicionarioMock = mapOf(
     ),
     "stop sign" to ConteudoEducacional(
         palavraTraduzida = "Placa de Pare",
-        silabas = "Pla-ca de Pa-re",
+        silabas = "Pla-ca  de  Pa-re",
         frases = listOf(
             "A placa de pare está na esquina.",
             "Pare na placa para sua segurança.",
@@ -331,7 +331,7 @@ private val dicionarioMock = mapOf(
     ),
     "baseball bat" to ConteudoEducacional(
         palavraTraduzida = "Taco de beisebol",
-        silabas = "Ta-co de bei-se-bol",
+        silabas = "Ta-co  de  bei-se-bol",
         frases = listOf(
             "Eu comprei um taco de beisebol.",
             "O taco de beisebol está na loja.",
@@ -340,7 +340,7 @@ private val dicionarioMock = mapOf(
     ),
     "baseball glove" to ConteudoEducacional(
         palavraTraduzida = "Luva de beisebol",
-        silabas = "Lu-va de bei-se-bol",
+        silabas = "Lu-va  de  bei-se-bol",
         frases = listOf(
             "Eu tenho uma luva de beisebol.",
             "A luva de beisebol está no armário.",
@@ -358,7 +358,7 @@ private val dicionarioMock = mapOf(
     ),
     "surfboard" to ConteudoEducacional(
         palavraTraduzida = "Prancha de surf",
-        silabas = "Pran-cha de surf",
+        silabas = "Pran-cha  de  surf",
         frases = listOf(
             "Eu comprei uma prancha de surf.",
             "A prancha de surf está na praia.",
@@ -367,7 +367,7 @@ private val dicionarioMock = mapOf(
     ),
     "tennis racket" to ConteudoEducacional(
         palavraTraduzida = "Raquete de tênis",
-        silabas = "Ra-que-te de tê-nis",
+        silabas = "Ra-que-te  de  tê-nis",
         frases = listOf(
             "Eu comprei uma raquete de tênis.",
             "A raquete de tênis está na quadra.",
@@ -385,7 +385,7 @@ private val dicionarioMock = mapOf(
     ),
     "wine glass" to ConteudoEducacional(
         palavraTraduzida = "Taça de vinho",
-        silabas = "Ta-ça de vi-nho",
+        silabas = "Ta-ça  de  vi-nho",
         frases = listOf(
             "Eu comprei uma taça de vinho.",
             "A taça está na mesa.",
@@ -421,7 +421,7 @@ private val dicionarioMock = mapOf(
     ),
     "spoon" to ConteudoEducacional(
         palavraTraduzida = "Colher",
-        silabas = "Co-lhe-r",
+        silabas = "Co-lher",
         frases = listOf(
             "Eu uso a colher para comer sopa.",
             "A colher está na gaveta.",
@@ -556,7 +556,7 @@ private val dicionarioMock = mapOf(
     ),
     "dining table" to ConteudoEducacional(
         palavraTraduzida = "Mesa de jantar",
-        silabas = "Me-sa de jan-tar",
+        silabas = "Me-sa  de  jan-tar",
         frases = listOf(
             "A mesa de jantar está posta.",
             "Eu limpei a mesa de jantar.",
@@ -565,7 +565,7 @@ private val dicionarioMock = mapOf(
     ),
     "toilet" to ConteudoEducacional(
         palavraTraduzida = "Vaso sanitário",
-        silabas = "Va-so sa-ni-tá-rio",
+        silabas = "Va-so  sa-ni-tá-rio",
         frases = listOf(
             "O vaso sanitário está limpo.",
             "Eu limpei o vaso sanitário.",
@@ -582,17 +582,17 @@ private val dicionarioMock = mapOf(
         )
     ),
     "laptop" to ConteudoEducacional(
-        palavraTraduzida = "Notebook",
-        silabas = "Note-book",
+        palavraTraduzida = "Computador",
+        silabas = "Com-pu-ta-dor",
         frases = listOf(
-            "Eu gosto do meu notebook.",
-            "O notebook está guardado.",
-            "Ele usa o notebook para trabalhar remotamente."
+            "Eu gosto do meu computador.",
+            "O computador está guardado.",
+            "Ele usa o computador para trabalhar remotamente."
         )
     ),
     "remote" to ConteudoEducacional(
         palavraTraduzida = "Controle remoto",
-        silabas = "Con-tro-le re-mo-to",
+        silabas = "Con-tro-le  re-mo-to",
         frases = listOf(
             "Eu peguei o controle remoto.",
             "O controle remoto está na sala.",
@@ -664,7 +664,7 @@ private val dicionarioMock = mapOf(
     ),
     "clock" to ConteudoEducacional(
         palavraTraduzida = "Relógio",
-        silabas = "Re-ló-gio",
+        silabas = "Re-ló-gi-o",
         frases = listOf(
             "Eu olhei para o relógio.",
             "O relógio está atrasado.",
@@ -691,7 +691,7 @@ private val dicionarioMock = mapOf(
     ),
     "teddy bear" to ConteudoEducacional(
         palavraTraduzida = "Urso de pelúcia",
-        silabas = "Ur-so de pe-lú-ci-a",
+        silabas = "Ur-so  de  pe-lú-ci-a",
         frases = listOf(
             "Eu tenho um urso de pelúcia.",
             "O urso de pelúcia está na cama.",
@@ -700,7 +700,7 @@ private val dicionarioMock = mapOf(
     ),
     "hair drier" to ConteudoEducacional(
         palavraTraduzida = "Secador de cabelo",
-        silabas = "Se-ca-dor de ca-be-lo",
+        silabas = "Se-ca-dor  de  ca-be-lo",
         frases = listOf(
             "Eu usei o secador de cabelo.",
             "O secador de cabelo está no banheiro.",
@@ -709,7 +709,7 @@ private val dicionarioMock = mapOf(
     ),
     "toothbrush" to ConteudoEducacional(
         palavraTraduzida = "Escova de dentes",
-        silabas = "Es-co-va de den-tes",
+        silabas = "Es-co-va  de  den-tes",
         frases = listOf(
             "Eu tenho uma escova de dentes nova.",
             "A escova de dentes está no banheiro.",

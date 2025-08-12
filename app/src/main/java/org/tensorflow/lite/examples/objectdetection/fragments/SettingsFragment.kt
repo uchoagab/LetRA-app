@@ -1,6 +1,7 @@
 package org.tensorflow.lite.examples.objectdetection.fragments
 
 import android.content.res.ColorStateList
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -38,25 +39,14 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setupModelSwitch() {
+        // Carrega a configuração atual
         val currentModel = SettingsManager.loadModelChoice(requireContext())
         binding.switchModelSelector.isChecked = (currentModel == ObjectDetectorHelper.MODEL_YOLO)
 
-        // Aplica as cores do protótipo ao Switch
-        val states = arrayOf(
-            intArrayOf(-android.R.attr.state_checked),
-            intArrayOf(android.R.attr.state_checked)
-        )
-        val thumbColors = intArrayOf(
-            ContextCompat.getColor(requireContext(), android.R.color.darker_gray),
-            ContextCompat.getColor(requireContext(), R.color.cor_botao_principal)
-        )
-        val trackColors = intArrayOf(
-            ContextCompat.getColor(requireContext(), android.R.color.white),
-            ContextCompat.getColor(requireContext(), R.color.cor_subtitulo)
-        )
-        binding.switchModelSelector.thumbTintList = ColorStateList(states, thumbColors)
-        binding.switchModelSelector.trackTintList = ColorStateList(states, trackColors)
+        // Atualiza a aparência dos textos com base na escolha inicial
+        updateModelLabels(binding.switchModelSelector.isChecked)
 
+        // Salva a nova configuração e atualiza a aparência quando o botão é alterado
         binding.switchModelSelector.setOnCheckedChangeListener { _, isChecked ->
             val newModel = if (isChecked) {
                 ObjectDetectorHelper.MODEL_YOLO
@@ -64,12 +54,29 @@ class SettingsFragment : Fragment() {
                 ObjectDetectorHelper.MODEL_EFFICIENTDETV0
             }
             SettingsManager.saveModelChoice(requireContext(), newModel)
+            updateModelLabels(isChecked)
+        }
+    }
+
+    // Função de ajuda para alterar a cor e o estilo do texto
+    private fun updateModelLabels(isYoloSelected: Boolean) {
+        if (isYoloSelected) {
+            // Se YOLO estiver selecionado, realça o texto "YOLO"
+            binding.labelYolo.setTextColor(ContextCompat.getColor(requireContext(), R.color.cor_titulo))
+            binding.labelYolo.setTypeface(null, Typeface.BOLD)
+            binding.labelEfficientdet.setTextColor(ContextCompat.getColor(requireContext(), R.color.cor_subtitulo))
+            binding.labelEfficientdet.setTypeface(null, Typeface.NORMAL)
+        } else {
+            // Se EfficientDet estiver selecionado, realça o texto "EfficientDet"
+            binding.labelEfficientdet.setTextColor(ContextCompat.getColor(requireContext(), R.color.cor_titulo))
+            binding.labelEfficientdet.setTypeface(null, Typeface.BOLD)
+            binding.labelYolo.setTextColor(ContextCompat.getColor(requireContext(), R.color.cor_subtitulo))
+            binding.labelYolo.setTypeface(null, Typeface.NORMAL)
         }
     }
 
     private fun setupClearDictionaryButton() {
         binding.buttonClearDictionary.setOnClickListener {
-            // Mostra um diálogo de confirmação antes de apagar
             AlertDialog.Builder(requireContext())
                 .setTitle("Apagar Dicionário")
                 .setMessage("Tem a certeza de que quer apagar todas as palavras e imagens salvas? Esta ação não pode ser desfeita.")
