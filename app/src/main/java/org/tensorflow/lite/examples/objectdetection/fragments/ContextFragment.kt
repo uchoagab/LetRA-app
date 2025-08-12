@@ -1,8 +1,11 @@
 package org.tensorflow.lite.examples.objectdetection.fragments
 
 import android.graphics.Typeface
+import android.graphics.text.LineBreaker
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.text.Layout
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
@@ -44,6 +47,9 @@ class ContextFragment : Fragment() {
                 text = highlightWordInSentence(frase, args.palavra)
                 textSize = 20f
                 setPadding(0, 12, 0, 12)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    justificationMode = LineBreaker.JUSTIFICATION_MODE_INTER_WORD
+                }
             }
             binding.linearLayoutFrases.addView(textView)
         }
