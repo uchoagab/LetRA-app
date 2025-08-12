@@ -4,14 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cor_fundo_app"
     tools:context=".fragments.DictionaryFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:title="Meu Dicionário"
+        app:title="Dicionário"
+        app:titleTextColor="@color/cor_titulo"
+        app:titleCentered="true"
         app:navigationIcon="@drawable/ic_arrow_back"
+        app:titleTextAppearance="@style/ToolbarTitleStyle"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
