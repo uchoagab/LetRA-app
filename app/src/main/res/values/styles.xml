@@ -5,6 +5,8 @@
     Isto resolve o erro de "InflateException" com o MaterialCardView.
     -->
     <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Fonte -->
+        <item name="android:fontFamily">@font/app_font_family</item>
         <!-- Personalize o seu tema aqui. -->
         <item name="colorPrimary">@color/toolbar_background</item>
         <item name="colorPrimaryVariant">@color/toolbar_background</item>
@@ -52,5 +54,9 @@
     <style name="BottomSheetSpinnerItemStyle" parent="Widget.AppCompat.TextView.SpinnerItem">
         <item name="android:textAppearance">?attr/textAppearanceTitleMedium</item>
         <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">28sp</item>
     </style>
 </resources>

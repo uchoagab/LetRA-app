@@ -26,4 +26,12 @@
     <color name="icFocused">#DDFFFFFF</color>
     <color name="icPressed">#AAFFFFFF</color>
     <color name="app_background">#2D3E50</color>
+
+    <!-- Cores do Protótipo -->
+    <color name="cor_fundo_app">#EFEFEF</color>
+    <color name="cor_botao_principal">#0E6DEC</color>
+    <color name="cor_botao_desativado">#011131</color>
+    <color name="cor_texto_botao">#FFFFFF</color>
+    <color name="cor_titulo">#074CA9</color>
+    <color name="cor_subtitulo">#6A94FD</color>
 </resources>
